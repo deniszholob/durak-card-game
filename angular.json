@@ -109,6 +109,21 @@
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "browserTarget": "durak-card-game:build",
+            "port": 6006,
+            "styles": ["src/styles/styles.scss"]
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "browserTarget": "durak-card-game:build",
+            "styles": ["src/styles/styles.scss"]
+          }
         }
       }
     }

@@ -15,15 +15,29 @@
 
     <!-- Title/Icon -->
     <title>Durak Card Game</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="assets/images/fool-icon.ico" />
     <base href="./" />
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script
+      async=""
+      src="https://www.googletagmanager.com/gtag/js?id=UA-28080172-12"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-28080172-12');
+    </script>
   </head>
 
   <body>
-    <dcg-root>
-      <div class="text-center pt-5">
+    <dcg-root class="contents">
+      <div class="pt-5 text-center">
         <i class="fa fa-spinner fa-spin"></i> Loading...
-        <p class="text-neutral-400">
+        <p class="text-black-400">
           If this is loading forever, there may be a bug.
           <br />
           Hit <strong>F12</strong> to bring up the Debug console, and

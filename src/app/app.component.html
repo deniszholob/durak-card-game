@@ -1,17 +1,12 @@
-<div class="flex flex-col justify-between h-screen">
-  <h1 class="text-3xl text-center p-1">Hello world!</h1>
+<dcg-header class="header"></dcg-header>
 
-  <footer class="text-sm text-center flex justify-center">
-    <p class="p-1">
-      <i class="fab fa-github"></i>
-      <a
-        href="https://github.com/deniszholob/durak-card-game"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Code
-      </a>
-    </p>
-    <p *ngIf="appVersion" class="p-1">v{{ appVersion }}</p>
-  </footer>
-</div>
+<main class="overflow-auto main">
+  <dcg-main
+    class="flex flex-col flex-auto overflow-auto"
+    *ngIf="gameService.isGame"
+  ></dcg-main>
+
+  <dcg-end-game *ngIf="gameService.isGameOver"> </dcg-end-game>
+</main>
+
+<dcg-footer class="p-2 text-sm footer" [version]="appVersion"></dcg-footer>

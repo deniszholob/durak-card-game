@@ -4,7 +4,13 @@
     "ecmaVersion": 2020
   },
   "ignorePatterns": ["projects/**/*"],
+  "plugins": ["unused-imports", "simple-import-sort"],
   "overrides": [
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {}
+    },
     {
       "files": ["*.ts"],
       "parserOptions": {
@@ -13,7 +19,8 @@
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:storybook/recommended"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -32,14 +39,56 @@
             "style": "kebab-case"
           }
         ],
+        "@typescript-eslint/explicit-member-accessibility": "error",
+        "simple-import-sort/imports": "error",
         "max-len": "off",
         "eqeqeq": ["error", "smart"]
       }
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended"],
-      "rules": {}
+      "files": ["*.ts"],
+      "excludedFiles": ["*.spec.ts", ".stories.ts"],
+      "rules": {
+        "@typescript-eslint/explicit-member-accessibility": [
+          "error",
+          {
+            "overrides": { "constructors": "no-public" },
+            "ignoreMethodName": [
+              "ngOnChanges",
+              "ngOnInit",
+              "ngDoCheck",
+              "ngAfterContentInit",
+              "ngAfterContentChecked",
+              "ngAfterViewInit",
+              "ngAfterViewChecked",
+              "ngOnDestroy",
+              "ngxsOnInit"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.stories.ts"],
+      "extends": ["plugin:@angular-eslint/template/process-inline-templates"],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "sb",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "sb",
+            "style": "kebab-case"
+          }
+        ]
+      }
     }
   ]
 }

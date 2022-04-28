@@ -1,0 +1,9 @@
+<div class="flex justify-center w-full" id="player-hand">
+  <dcg-playing-card
+    class="cardWrapper"
+    *ngFor="let card of cards"
+    [card]="card"
+    [actions]="getActionsForCard(card)"
+    (actionChange)="onCardAction($event)"
+  ></dcg-playing-card>
+</div>

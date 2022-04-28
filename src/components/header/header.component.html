@@ -1,0 +1,32 @@
+<div class="flex flex-row justify-between p-3">
+  <a class="flex flex-row items-center text-white hover:text-white" href="#">
+    <img class="w-10 h-10" src="assets/images/the-fool.webp" alt="fool" />
+    <h1 class="text-2xl">{{ title }}</h1>
+  </a>
+  <div class="flex flex-row items-center">
+    <div class="justify-center hidden gap-4 sm:flex">
+      <button class="secondary" *ngIf="gameService.isGame" (click)="endGame()">
+        Forfeit Game
+      </button>
+      <button class="primary" *ngIf="!gameService.isGame" (click)="newGame()">
+        New Game
+      </button>
+
+      <div class="flex items-center gap-1">
+        <label for="">Cards</label>
+        <button class="p-0 bg-transparent border-transparent">
+          <div class="bg-gray-500 hover:bg-primary-500 card-badge">?</div>
+        </button>
+      </div>
+
+      <dcg-switch [text]="'log'"></dcg-switch>
+
+      <a class="inline-flex items-center px-1" href="#">
+        <i class="fa-solid fa-circle-info fa-lg"></i>
+      </a>
+    </div>
+    <button class="px-1 sm:hidden link">
+      <i class="fa-solid fa-bars fa-2xl"></i>
+    </button>
+  </div>
+</div>

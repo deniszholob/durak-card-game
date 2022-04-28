@@ -1,0 +1,24 @@
+<div class="relative inline-flex px-0 pb-3 sm:p-1 player">
+  <div class="absolute top-0 left-0 right-0 flex justify-center">
+    <div
+      class="overflow-hidden font-bold text-center text-shadow my-drop-shadow text-ellipsis"
+      title="{{ label | titlecase }}"
+    >
+      {{ label | titlecase }}
+    </div>
+  </div>
+  <div class="icon-wrap">
+    <i class="fa-solid fa-circle-user fa-fw" *ngIf="!avatar"></i>
+    <img
+      *ngIf="avatar"
+      src="assets/images/avatars/avatar-{{ avatar }}.png"
+      alt="{{ avatar }}"
+    />
+  </div>
+  <div
+    class="absolute left-0 right-0 flex justify-center bottom-1"
+    *ngIf="cardCount"
+  >
+    <div class="card-badge">{{ cardCount }}</div>
+  </div>
+</div>
