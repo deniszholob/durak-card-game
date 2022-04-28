@@ -1,0 +1,66 @@
+<div class="playing-card relative text-{{ card.color }}-600">
+  <span class="absolute top-0 left-[.1rem] card-corner">
+    <span>{{ card.rankString }}</span>
+    <span class="text-[0.8em]"> {{ card.suitString }} </span></span
+  >
+  <span class="text-[1.25em]" [ngClass]="{ 'trump-outline': card.isTrump }">
+    {{ card.suitString }}
+  </span>
+  <span class="absolute rotate-180 bottom-0 right-[.1rem] card-corner">
+    <span>{{ card.rankString }}</span>
+    <span class="text-[0.8em]">{{ card.suitString }} </span></span
+  >
+
+  <ng-container *ngFor="let o of overlays">
+    <dcg-card-overlay
+      [cardOverlay]="o"
+      (actionChange)="onAction2($event)"
+    ></dcg-card-overlay>
+  </ng-container>
+
+  <!-- <div
+    class="hidden text-red-600 bg-red-600 bg-black-600 text-black-600 card-overlay-red card-overlay-yellow card-overlay-grey card-overlay-blue card-overlay-green"
+  >
+    Preload Tailwind classes
+  </div>
+
+  <ng-container *ngIf="ACTION_OVERLAYS[action]">
+    <ng-container
+      *ngTemplateOutlet="
+        action !== MyCardActions.transfer_defend ? fullOverlay : splitOverlay;
+        context: { ctx: ACTION_OVERLAYS[action] }
+      "
+    ></ng-container
+  ></ng-container> -->
+</div>
+
+<!--
+<ng-template #fullOverlay let-cardOverlay="ctx">
+  <div
+    class="card-overlay-full card-overlay-{{ cardOverlay.color[0] }}"
+    (click)="onAction(cardOverlay.actions?.[0])"
+  >
+    <span class="card-overlay-{{ cardOverlay.position }}">
+      {{ cardOverlay.text[0] }}
+    </span>
+  </div>
+</ng-template>
+
+<ng-template #splitOverlay let-cardOverlay="ctx">
+  <div
+    class="card-overlay-top card-overlay-{{ cardOverlay.color[0] }}"
+    (click)="onAction(cardOverlay.actions[0])"
+  >
+    <span>
+      {{ cardOverlay.text[0] }}
+    </span>
+  </div>
+  <div
+    class="card-overlay-bottom card-overlay-{{ cardOverlay.color[1] }}"
+    (click)="onAction(cardOverlay.actions[1])"
+  >
+    <span>
+      {{ cardOverlay.text[1] }}
+    </span>
+  </div>
+</ng-template> -->

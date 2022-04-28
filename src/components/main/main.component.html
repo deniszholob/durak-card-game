@@ -1,0 +1,121 @@
+<div class="py-2 text-center bg-sky-500/50" id="messages">
+  <i class="fa-solid fa-circle-info fa-fw"></i>
+  <span class="font-bold">
+    {{ getPlayerFromIndex(gameService.currentAttacker).label }}
+  </span>
+  is attacking
+  <span class="font-bold">
+    {{ getPlayerFromIndex(gameService.currentDefender).label }}
+  </span>
+</div>
+
+<div
+  class="flex w-full py-2 overflow-auto lg:p-2 border-y border-black-900"
+  id="players"
+>
+  <div class="flex flex-row items-center justify-center gap-0 m-auto sm:gap-4">
+    <dcg-player-avatar
+      *ngFor="let player of gameService.players"
+      [avatar]="player.avatar"
+      [label]="player.label"
+      [cardCount]="player.cards.length"
+    ></dcg-player-avatar>
+  </div>
+</div>
+
+<!--
+    class="flex flex-wrap justify-around flex-1 w-full max-w-screen-lg gap-4 p-2 m-auto overflow-auto " -->
+
+<div
+  class="grid items-start flex-1 w-full max-w-screen-lg grid-cols-4 gap-4 p-2 m-auto overflow-auto"
+  id="game"
+>
+  <div
+    class="min-w-[200px] flex items-center justify-center gap-4 flex-col"
+    id="deck"
+  >
+    <dcg-card-deck [deck]="gameService.deck"></dcg-card-deck>
+  </div>
+
+  <div
+    class="flex flex-col items-center flex-1 col-span-2 px-2"
+    id="game-pre-start"
+    *ngIf="showPreGame"
+  >
+    <!-- <span>{{ getPlayerFromIndex(gameService.playerOrder[0].i).label }}</span> -->
+    <span>{{ getPlayerFromIndex(0).label }}</span>
+    has the lowest trump trump/card and goes first
+    <dcg-card-set id="lowest-trumps" [cards]="getPlayerTrumps()"></dcg-card-set>
+
+    <button class="primary" (click)="beginGame()">Begin</button>
+  </div>
+
+  <div
+    class="flex flex-col items-center flex-1 px-2"
+    id="arena"
+    *ngIf="!showPreGame"
+  >
+    <dcg-battle [battle]="gameService.battleRound"></dcg-battle>
+  </div>
+
+  <!-- <div>
+    <dcg-card-deck [deck]="testDeck" [spread]="true"></dcg-card-deck>
+  </div> -->
+</div>
+
+<div
+  class="p-2 mb-6 overflow-auto border-t lg:pt-6 border-black-900"
+  id="current-player"
+  *ngIf="manualPlayer"
+>
+  <div class="w-full mb-2 text-center text-secondary-100">
+    {{ manualPlayer.label }}'s Hand
+    <!-- {{ playerMessage }} -->
+
+    <div class="mt-2" *ngIf="manualPlayer">
+      <!-- <button
+        class="mx-2 primary"
+        [disabled]="gameService.deck.cards.length <= 0"
+      >
+        Take
+      </button>
+      <button class="mx-2 primary">Done</button> -->
+
+      <button
+        class="mx-1 primary"
+        *ngFor="let action of gameService.manualActions | actionBattle"
+        (click)="gameService.executeAction(manualPlayer, action)"
+      >
+        {{ ACTION_NAMES[action.type] }}
+      </button>
+    </div>
+  </div>
+
+  <dcg-card-set
+    id="player-hand"
+    *ngIf="gameService?.players"
+    [cards]="manualPlayer.cards"
+    [setActions]="gameService.manualActions | actionCard"
+    (actionChange)="gameService.executeAction(manualPlayer, $event)"
+  ></dcg-card-set>
+
+  <!-- <button
+    *ngFor="let action of gameService.manualActions | actionCard"
+    class="mx-1 primary"
+    (click)="gameService.executeAction(manualPlayer, action)"
+  >
+
+    {{ ACTION_NAMES[action.type] }}
+    {{ action.card ? '| ' + action.card : '' }}
+    {{ action.target ? '=> ' + action.target : '' }}
+  </button> -->
+</div>
+
+<!-- <hr />
+<h1>TEST</h1>
+<hr />
+
+<div *ngFor="let player of gameService?.players">
+  {{ player.label | titlecase }}
+  <dcg-card-set [cards]="player.cards"></dcg-card-set>
+</div> -->

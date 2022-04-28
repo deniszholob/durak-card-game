@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-
 import packageJson from '@dcg/package';
+
+import { GameService } from './logic/game.service';
 
 @Component({
   selector: 'dcg-root',
@@ -8,4 +9,5 @@ import packageJson from '@dcg/package';
 })
 export class AppComponent {
   public appVersion: string | undefined = packageJson?.version;
+  constructor(public gameService: GameService) {}
 }

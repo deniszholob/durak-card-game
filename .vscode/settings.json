@@ -1,35 +1,41 @@
 {
   "files.exclude": {
-    "**/.browserslistrc": true,
-    "**/environments": true,
-    "**/src/main.ts": true,
-    "**/polyfills.ts": true,
-    "**/test-setup*": true,
-    "**/.eslint*": true,
-    "**/jest*": true,
-    "**/tsconfig*": true,
-    "**/coverage/": true,
-    "**/dist/": true,
-    "**/screenshots/": true,
-    "**/tools/": true,
-    "**/.editorconfig": true,
-    "**/.gitignore": true,
-    "**/.gitkeep": true,
-    "**/.npmrc": true,
-    "**/.prettierignore": true,
-    "**/.prettierrc": true,
-    "**/decorate-angular-cli.js": true,
-    "**/FUNDING.yml": true,
-    "**/LICENSE": true,
-    "**/readme-nx.md": true,
-    "**/.angular": true,
-    "**/.github": true,
-    "**/.husky": true,
-    "**/node_modules": true
+    "**/.babelrc": false,
+    "**/*.d.ts": false,
+    "documentation.json": false,
+    "angular.json": false,
+    "**/.browserslistrc": false,
+    "**/environments": false,
+    "**/src/main.ts": false,
+    "**/polyfills.ts": false,
+    "**/test-setup*": false,
+    "**/.eslint*": false,
+    "**/jest*": false,
+    "**/tsconfig*": false,
+    "**/coverage/": false,
+    "**/dist/": false,
+    "**/screenshots/": false,
+    "**/tools/": false,
+    "**/.editorconfig": false,
+    "**/.gitignore": false,
+    "**/.gitkeep": false,
+    "**/.npmrc": false,
+    "**/.prettierignore": false,
+    "**/.prettierrc": false,
+    "**/decorate-angular-cli.js": false,
+    "**/FUNDING.yml": false,
+    "**/LICENSE": false,
+    "**/readme-nx.md": false,
+    "**/package-lock.json": false,
+    "**/.angular": false,
+    "**/.github": false,
+    "**/.husky": false,
+    "**/node_modules": false
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.renderWhitespace": "all",
   "editor.rulers": [80],
+  "explorer.sortOrderLexicographicOptions": "lower", // Case sensitive file ordering in tree
   "workbench.iconTheme": "material-icon-theme",
   "material-icon-theme.activeIconPack": "angular_ngrx",
   "material-icon-theme.folders.associations": {
@@ -58,7 +64,7 @@
     "models.ts": "url",
     "services.ts": "url"
   },
-  "cSpell.words": ["durak"],
+  "cSpell.words": ["durak", "titlecase"],
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -71,5 +77,6 @@
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+
   "svg.preview.background": "transparent"
 }
