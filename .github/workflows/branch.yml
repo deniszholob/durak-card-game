@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '14.17.0'
 
@@ -49,14 +49,14 @@ jobs:
       # https://docs.github.com/en/actions/learn-github-actions/essential-features-of-github-actions#sharing-data-between-jobs
       - name: Archive web demo build
         if: success()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: web-demo-build
           path: dist # Directory to push to GitHub Pages
 
       - name: Archive test coverage report
         if: success()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: web-test-coverage
           path: coverage # Directory to save
