@@ -5,13 +5,35 @@
 @tailwind utilities;
 
 $trump-outline: purple;
+$stripe-width: 30px;
+$stripe-color1: #222;
+$stripe-color2: #333;
+
+:root {
+  --card-w-sm: 53px;
+  --card-h-sm: 74px;
+  --card-w-lg: 72px;
+  --card-h-lg: 100px;
+  --card-w-xl: 144px;
+  --card-h-xl: 200px;
+}
 
 .trump-outline {
   // text-shadow: 0px 0px 1px black, 0px 0px 10px black;
   // background: rgb(63 0 255 / 50%);
   // border-radius: 100%;
   // padding: 0 4px;
-  @apply bg-blue-300 rounded-full px-1.5;
+  @apply bg-blue-300 rounded-full px-[0.25em];
+}
+
+.stripe-1 {
+  background: repeating-linear-gradient(
+    45deg,
+    $stripe-color1,
+    $stripe-color1 $stripe-width,
+    $stripe-color2 $stripe-width,
+    $stripe-color2 $stripe-width * 2
+  );
 }
 
 @layer base {
@@ -101,10 +123,11 @@ $trump-outline: purple;
     /* @apply card h-[100px] w-[72px]; */
     /* @apply w-fit h-fit; */
     /* shadow-md shadow-black-900; */
-    @apply min-w-[12px] max-w-[90px];
+    @apply min-w-[12px] max-w-[var(--card-w-sm)] lg:max-w-[var(--card-w-lg)] xl:max-w-[var(--card-w-xl)];
   }
+
   .cardWrapper:last-child {
-    @apply min-w-[72px]; // Max card width
+    @apply min-w-[var(--card-w-sm)] lg:min-w-[var(--card-w-lg)] xl:min-w-[var(--card-w-xl)]; // Max card width
   }
 
   .cardWrapper:last-child,
@@ -112,20 +135,35 @@ $trump-outline: purple;
     /* @apply overflow-visible; */
   }
 
+  .cardWrapper:hover,
+  .cardWrapper:active {
+    .playing-card {
+      @apply z-10 shadow-primary-900;
+    }
+  }
+
   .playing-card {
     /* @apply card h-[69px] w-[51px] lg:h-[93px] lg:w-[69px] lg:text-2xl text-xl; */
     /* @apply card h-[74px] w-[53px] lg:h-[100px] lg:w-[72px] lg:text-2xl text-xl; */
-    @apply card lg:text-2xl text-xl;
-    @apply h-[74px] w-[53px] lg:h-[100px] lg:w-[72px]; // xl:h-[200px] xl:w-[144px]
+    @apply card text-xl lg:text-2xl xl:text-4xl;
+    @apply h-[var(--card-h-sm)] w-[var(--card-w-sm)] lg:h-[var(--card-h-lg)] lg:w-[var(--card-w-lg)] xl:h-[var(--card-h-xl)] xl:w-[var(--card-w-xl)];
     // @apply h-[100px] w-[72px];
     /* @apply w-full h-full; */
     @apply shadow-md shadow-black-900;
-  }
 
-  .playing-card .card-corner {
-    @apply flex-centered flex-col;
-    & > span {
-      @apply h-[1em] leading-[1em];
+    .card-corner {
+      @apply flex-centered flex-col;
+      & > span {
+        @apply h-[1em] leading-[1em];
+      }
+    }
+
+    .card-suit {
+      @apply text-[0.8em] leading-[0.8em];
+    }
+
+    .card-center {
+      @apply text-[1.25em] leading-[1.25em];
     }
   }
 

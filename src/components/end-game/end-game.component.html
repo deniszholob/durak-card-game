@@ -1,5 +1,7 @@
-<div class="m-auto text-center" id="endGame">
-  <h1 class="text-2xl">Game is over!</h1>
+<div class="flex flex-col gap-4 m-auto text-center" id="endGame">
+  <dcg-info-bar>
+    <h1 class="text-2xl">Game is over!</h1>
+  </dcg-info-bar>
 
   <div class="flex flex-col" *ngIf="foolPlayer">
     <dcg-player-avatar
@@ -7,12 +9,14 @@
       [label]="foolPlayer.label"
     ></dcg-player-avatar>
     <p>
-      {{ foolPlayer.label | titlecase }} is the Fool with
-      {{ foolPlayer.cards.length }} cards left!
+      <span class="font-bold">{{ foolPlayer.label | titlecase }}</span>
+      is the Fool with {{ foolPlayer.cards.length }} cards left!
     </p>
   </div>
 
   <div *ngIf="!foolPlayer">No one is the fool this round!</div>
 
-  <button class="primary" (click)="playAgain()">Play again?</button>
+  <div>
+    <button class="primary" (click)="playAgain()">Play again?</button>
+  </div>
 </div>

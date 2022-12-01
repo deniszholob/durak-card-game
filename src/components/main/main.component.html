@@ -1,16 +1,5 @@
-<div class="py-2 text-center bg-sky-500/50" id="messages">
-  <i class="fa-solid fa-circle-info fa-fw"></i>
-  <span class="font-bold">
-    {{ getPlayerFromIndex(gameService.currentAttacker).label }}
-  </span>
-  is attacking
-  <span class="font-bold">
-    {{ getPlayerFromIndex(gameService.currentDefender).label }}
-  </span>
-</div>
-
 <div
-  class="flex w-full py-2 overflow-auto lg:p-2 border-y border-black-900"
+  class="flex w-full py-2 overflow-auto lg:p-2 border-y border-black-900 stripe-1"
   id="players"
 >
   <div class="flex flex-row items-center justify-center gap-0 m-auto sm:gap-4">
@@ -22,6 +11,18 @@
     ></dcg-player-avatar>
   </div>
 </div>
+
+<dcg-info-bar>
+  <p>
+    <span class="font-bold">
+      {{ getPlayerFromIndex(gameService.currentAttacker).label | titlecase }}
+    </span>
+    is attacking
+    <span class="font-bold">
+      {{ getPlayerFromIndex(gameService.currentDefender).label | titlecase }}
+    </span>
+  </p>
+</dcg-info-bar>
 
 <!--
     class="flex flex-wrap justify-around flex-1 w-full max-w-screen-lg gap-4 p-2 m-auto overflow-auto " -->
@@ -38,20 +39,24 @@
   </div>
 
   <div
-    class="flex flex-col items-center flex-1 col-span-2 px-2"
+    class="flex flex-col items-center flex-1 col-span-2 gap-4 px-2"
     id="game-pre-start"
     *ngIf="showPreGame"
   >
     <!-- <span>{{ getPlayerFromIndex(gameService.playerOrder[0].i).label }}</span> -->
-    <span>{{ getPlayerFromIndex(0).label }}</span>
-    has the lowest trump trump/card and goes first
+    <p>
+      <span class="font-bold">
+        {{ getPlayerFromIndex(0).label | titlecase }}
+      </span>
+      has the lowest trump trump/card and goes first
+    </p>
     <dcg-card-set id="lowest-trumps" [cards]="getPlayerTrumps()"></dcg-card-set>
 
     <button class="primary" (click)="beginGame()">Begin</button>
   </div>
 
   <div
-    class="flex flex-col items-center flex-1 px-2"
+    class="flex flex-col items-center flex-1 col-span-2 px-2"
     id="arena"
     *ngIf="!showPreGame"
   >
@@ -84,7 +89,7 @@
       <button
         class="mx-1 primary"
         *ngFor="let action of gameService.manualActions | actionBattle"
-        (click)="gameService.executeAction(manualPlayer, action)"
+        (click)="executeAction(manualPlayer, action)"
       >
         {{ ACTION_NAMES[action.type] }}
       </button>
@@ -96,7 +101,7 @@
     *ngIf="gameService?.players"
     [cards]="manualPlayer.cards"
     [setActions]="gameService.manualActions | actionCard"
-    (actionChange)="gameService.executeAction(manualPlayer, $event)"
+    (actionChange)="executeAction(manualPlayer, $event)"
   ></dcg-card-set>
 
   <!-- <button
