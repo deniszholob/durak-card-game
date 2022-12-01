@@ -21,21 +21,8 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '14.17.0'
-
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "::set-output name=dir::$(npm config get cache)"
-
-      - name: Cache node modules
-        id: npm-cache
-        uses: actions/cache@v3
-        with:
-          path: ${{steps.npm-cache-dir.outputs.dir}}
-          key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json')}}
-          restore-keys: |
-            ${{runner.os}}-node-
-            ${{runner.os}}-
+          node-version: '18.12.1'
+          cache: 'npm'
 
       - name: Install NPM Dependencies
         run: npm ci
