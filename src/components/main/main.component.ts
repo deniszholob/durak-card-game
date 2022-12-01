@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from 'src/app/logic/game.service';
 
-import { ACTION_NAMES } from '../models/game-action.model';
+import { ACTION_NAMES, RoundAction } from '../models/game-action.model';
 import { Player } from '../models/player.model';
 import { CardRank, CardSuit } from '../playing-card/playing-card.enum';
 import { PlayingCard } from '../playing-card/playing-card.model';
@@ -38,7 +38,7 @@ export class MainComponent {
   // ];
 
   constructor(public gameService: GameService) {
-    this.manualPlayer = gameService.getManualPlayer();
+    this.getCurrentManualPlayer();
   }
 
   // ngOnInit() {}
@@ -59,5 +59,14 @@ export class MainComponent {
 
   public getPlayerFromIndex(i: number): Player {
     return this.gameService.players[i];
+  }
+
+  public getCurrentManualPlayer() {
+    this.manualPlayer = this.gameService.getCurrentManualPlayer();
+  }
+
+  public executeAction(player: Player, action: RoundAction): void {
+    this.gameService.executeAction(player, action);
+    // this.getCurrentManualPlayer();
   }
 }

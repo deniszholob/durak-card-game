@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, filter, Subject, tap } from 'rxjs';
 // Component models
 import { Bout } from 'src/components/bout/bout.model';
 import { CardDeck } from 'src/components/card-deck/card-deck.model';
 import {
+  ActionCardAttack,
+  ActionCardDefend,
+  ActionCardTransfer,
   EBattleActions,
   ECardActions,
   RoundAction,
@@ -21,6 +25,7 @@ import { randomEnum } from 'src/utils/array-functions/array-functions';
 import { MAX_HAND_SIZE, STANDARD_DECK_SIZE } from './config.const';
 import { GameState } from './game-state.model';
 
+// const DEFAULT_PLAYERS: PlayerType[] = [PlayerType.MANUAL, PlayerType.MANUAL];
 const DEFAULT_PLAYERS: PlayerType[] = [PlayerType.MANUAL, PlayerType.AI];
 // const DEFAULT_PLAYERS: PlayerType[] = [PlayerType.AI, PlayerType.AI];
 enum GameStatus {
@@ -104,7 +109,11 @@ export class GameService {
     return this.gameState.players[this.gameState.currentPlayerIndex];
   }
 
-  public getManualPlayer(): Player | undefined {
+  public getCurrentManualPlayer(): Player | undefined {
+    const currentPlayer = this.getCurrentPlayer();
+    if (currentPlayer.type === PlayerType.MANUAL) {
+      return currentPlayer;
+    }
     const player: Player | undefined = this.gameState.players.find(
       (p: Player): boolean => p.type === PlayerType.MANUAL
     );
@@ -201,7 +210,7 @@ export class GameService {
           id: i,
           type,
           cards: [],
-          label: type === PlayerType.MANUAL ? 'Player' : RANDOM_AVATAR,
+          label: type === PlayerType.MANUAL ? `Player ${i + 1}` : RANDOM_AVATAR,
           avatar: type === PlayerType.MANUAL ? undefined : RANDOM_AVATAR,
           // label: type === PlayerType.MANUAL ? 'Player' : Avatars[avatar],
           // avatar: type === PlayerType.MANUAL ? undefined : Avatars[avatar],
@@ -364,11 +373,13 @@ export class GameService {
     }
 
     actions.push(
-      ...availableCards.map<RoundAction>((c: PlayingCard) => ({
-        type: ECardActions.ATTACK,
-        card: c,
-        target: null,
-      }))
+      ...availableCards.map<RoundAction>(
+        (c: PlayingCard): ActionCardAttack => ({
+          type: ECardActions.ATTACK,
+          card: c,
+          target: null,
+        })
+      )
     );
 
     return actions;
@@ -399,7 +410,7 @@ export class GameService {
       ...availableDefenseCards.flatMap<RoundAction>(
         (defenseCard: PlayingCard): RoundAction[] =>
           PlayingCard.findPossibleAttackTargets(defenseCard, battleCards).map(
-            (attackCard: PlayingCard): RoundAction => ({
+            (attackCard: PlayingCard): ActionCardDefend => ({
               type: ECardActions.DEFEND,
               card: defenseCard,
               target: attackCard,
@@ -408,8 +419,22 @@ export class GameService {
       )
     );
 
+    // TODO: Transfers Actions: cannot do until game supports multiple actions per turn
+    // If transfer happens next player will have to beat 2 cars but can only perform 1 action.
     if (numBouts === 1) {
-      // TODO: Transfer available
+      // const transferCards: PlayingCard[] = PlayingCard.findMatchingFaceCards(
+      //   availableCards,
+      //   battleCards
+      // );
+      // actions.push(
+      //   ...transferCards.map(
+      //     (transferCard: PlayingCard): ActionCardTransfer => ({
+      //       type: ECardActions.TRANSFER,
+      //       card: transferCard,
+      //       target: null,
+      //     })
+      //   )
+      // );
     }
 
     // Can always Take
@@ -472,7 +497,9 @@ export class GameService {
   private endBoutAction(player: Player): void {
     console.log(`=== endBoutAction`, player);
 
-    if (this.isEndGame()) this.endGame();
+    if (this.isEndGame()) {
+      return this.endGame();
+    }
 
     if (
       player.id === this.gameState.attackerIdx &&
@@ -484,9 +511,7 @@ export class GameService {
         (this.gameState.currentPlayerIndex + 1) % this.playerCount;
     }
 
-    this.startNextBoutAction(
-      this.gameState.players[this.gameState.currentPlayerIndex]
-    );
+    this.startNextBoutAction(this.getCurrentPlayer());
   }
 
   private executeAssist(player: Player, action: RoundAction): void {
@@ -503,7 +528,7 @@ export class GameService {
       );
     }
     if (!action.card) {
-      throw new Error('No Attack card to execute attack with!');
+      throw new Error('No Attack card to execute Attack with!');
     }
 
     this.gameState.battle.push({ attackCard: action.card });
@@ -518,10 +543,10 @@ export class GameService {
   private executeDefend(player: Player, action: RoundAction): void {
     console.log(`=== executeDefend`, player, action);
     if (!action.card) {
-      throw new Error('No Attack card to execute defense with!');
+      throw new Error('No Attack card to execute Defense with!');
     }
     if (!action.target) {
-      throw new Error('No Target card to execute defense with!');
+      throw new Error('No Target card to execute Defense with!');
     }
 
     const boutIdx: number = this.gameState.battle.findIndex(
@@ -530,7 +555,7 @@ export class GameService {
 
     if (boutIdx < 0) {
       throw new Error(
-        `No Bout card found matching Target ${action.target} to execute defense with!`
+        `No Bout card found matching Target ${action.target} to execute Defense with!`
       );
     }
 
@@ -543,10 +568,11 @@ export class GameService {
     }
   }
 
+  /** Advance roles (switch from defender to attacker) */
   private executeTransfer(player: Player, action: RoundAction): void {
     console.log(`=== executeTransfer`, player, action);
-    this.endBoutAction(player);
-    throw new Error('Method not implemented.');
+    this.nextAttackPlayer();
+    this.executeAttack(player, action);
   }
 
   private executeWait(player: Player): void {
@@ -557,13 +583,15 @@ export class GameService {
   }
 
   private executeTake(player: Player): void {
+    // TODO: Add a way for other players to throw in cards b4 taking
+
     setTimeout(() => {
       console.log(`=== executeTake`);
       // TODO:Animations
       this.cleanBattle(player);
       this.replenishFromDeck();
       this.setNextBattle(true);
-    }, 1000);
+    }, 0);
     // throw new Error('Method not implemented.');
   }
 
@@ -574,7 +602,7 @@ export class GameService {
       this.cleanBattle();
       this.replenishFromDeck();
       this.setNextBattle();
-    }, 1000);
+    }, 0);
 
     // throw new Error('Method not implemented.');
   }
@@ -602,12 +630,19 @@ export class GameService {
 
   private setNextBattle(skipNextPlayer: boolean = false): void {
     console.log(`=== setNextBattle`, skipNextPlayer);
-    const nextPlayer = skipNextPlayer ? 2 : 1;
+    this.nextAttackPlayer(skipNextPlayer ? 2 : 1);
+    this.executeNextTurn();
+  }
+
+  /** Advances the next player to be the attacker:
+   * p1:Attacker, p2:Defender, p3:Assister =>
+   * p1:Assister, p2:Attacker, p3:Defender
+   */
+  private nextAttackPlayer(nextPlayer: 2 | 1 = 1): void {
     this.gameState.attackerIdx =
       (this.gameState.attackerIdx + nextPlayer) % this.playerCount;
     this.gameState.defenderIdx =
       (this.gameState.attackerIdx + 1) % this.playerCount;
-    this.executeNextTurn();
   }
 
   /*

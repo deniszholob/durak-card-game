@@ -6,7 +6,8 @@ import { GameService } from 'src/app/logic/game.service';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
-  public title = 'Game';
+  public titleSmall = 'Durak';
+  public title = `${this.titleSmall} Card Game`;
 
   constructor(public gameService: GameService) {}
 
